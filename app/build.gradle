@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-//    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation fileTree(dir: "libs", include: ["*.jar"])
 //    implementation(name: 'baselibraryx-10.0.0', ext: 'aar')
     implementation project(':baselibrary')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

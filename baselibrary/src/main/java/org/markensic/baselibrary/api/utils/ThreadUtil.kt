@@ -1,6 +1,5 @@
 package org.markensic.baselibrary.api.utils
 
-import android.hardware.ConsumerIrManager
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import java.util.concurrent.*
 import kotlin.math.roundToInt
@@ -21,8 +20,8 @@ object ThreadUtil {
         poolName: String,
         cpuUseTime: Int,
         ioUseTime: Int,
-        interval: Int,
-        taskUseTimeUnit: TimeUnit,
+        interval: Int = 0,
+        taskUseTimeUnit: TimeUnit = TimeUnit.MILLISECONDS,
         reject: RejectedExecutionHandler = ThreadPoolExecutor.AbortPolicy()
     ): ThreadPoolExecutor {
         return creatCommonTaskPool(
@@ -40,8 +39,8 @@ object ThreadUtil {
         poolName: String,
         cpuUseTime: Int,
         ioUseTime: Int,
-        interval: Int,
-        taskUseTimeUnit: TimeUnit,
+        interval: Int = 0,
+        taskUseTimeUnit: TimeUnit = TimeUnit.MILLISECONDS,
         reject: RejectedExecutionHandler = ThreadPoolExecutor.AbortPolicy()
     ): ThreadPoolExecutor {
         return creatCommonTaskPool(
@@ -79,8 +78,8 @@ object ThreadUtil {
         type: TaskType,
         cpuUseTime: Int,
         ioUseTime: Int,
-        interval: Int,
-        taskUseTimeUnit: TimeUnit,
+        interval: Int = 0,
+        taskUseTimeUnit: TimeUnit = TimeUnit.MILLISECONDS,
         reject: RejectedExecutionHandler = ThreadPoolExecutor.AbortPolicy()
     ): ThreadPoolExecutor {
         val taskUseTime = cpuUseTime + ioUseTime
@@ -100,11 +99,18 @@ object ThreadUtil {
                 }
             }
         }
-        val concurrent = (taskUseTime * coreSize / interval.toFloat()).let {
-            if (it < coreSize) {
-                coreSize
-            } else {
-                it.roundToInt()
+        val concurrent = when (interval) {
+            0 -> {
+                taskUseTime * coreSize
+            }
+            else -> {
+                (taskUseTime * coreSize / Math.abs(interval).toFloat()).let {
+                    if (it < coreSize) {
+                        coreSize
+                    } else {
+                        it.roundToInt()
+                    }
+                }
             }
         }
         val maxSize: Int by lazy {

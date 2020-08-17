@@ -25,7 +25,6 @@ android {
                     outputFileName = "baselibraryx-${defaultConfig.versionName}.aar"
                 }
             }
-
         }
     }
 }
