@@ -1,4 +1,4 @@
-package org.markensic.demo
+package org.markensic.demox
 
 import org.junit.Test
 

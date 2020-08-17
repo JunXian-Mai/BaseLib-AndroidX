@@ -1,11 +1,9 @@
-package org.markensic.demo
+package org.markensic.demox
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import org.markensic.baselibrary.api.utils.LogFileUtil
 import org.markensic.baselibrary.api.utils.PermissionsUtil
-import org.markensic.baselibrary.global.AppLog
-import org.markensic.demo.ui.main.MainFragment
+import org.markensic.demox.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 

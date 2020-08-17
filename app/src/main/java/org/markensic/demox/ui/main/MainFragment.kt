@@ -1,4 +1,4 @@
-package org.markensic.demo.ui.main
+package org.markensic.demox.ui.main
 
 import android.os.Bundle
 import android.util.Log
@@ -8,12 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.ViewModelProviders
-import org.markensic.baselibrary.api.utils.FileUtil
-import org.markensic.baselibrary.api.utils.LogFileUtil
 import org.markensic.baselibrary.global.AppLog
 import org.markensic.baselibrary.impl.ui.BaseUiView
-import org.markensic.demo.R
-import java.lang.NullPointerException
+import org.markensic.demox.R
 
 class MainFragment : Fragment(), BaseUiView {
 
