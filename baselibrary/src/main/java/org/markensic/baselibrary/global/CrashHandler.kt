@@ -1,11 +1,8 @@
 package org.markensic.baselibrary.global
 
-import android.content.Context
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Process
-import androidx.annotation.RequiresApi
 import org.markensic.baselibrary.api.utils.DisPlayUtil
 import org.markensic.baselibrary.api.utils.FileUtil
 import org.markensic.baselibrary.global.AppGlobal.Companion.sApplication
