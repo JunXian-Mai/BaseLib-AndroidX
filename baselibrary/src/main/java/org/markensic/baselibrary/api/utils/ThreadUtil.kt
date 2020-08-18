@@ -58,8 +58,8 @@ object ThreadUtil {
         poolName: String,
         cpuUseTime: Int,
         ioUseTime: Int,
-        interval: Int,
-        taskUseTimeUnit: TimeUnit,
+        interval: Int = 0,
+        taskUseTimeUnit: TimeUnit = TimeUnit.MILLISECONDS,
         reject: RejectedExecutionHandler = ThreadPoolExecutor.AbortPolicy()
     ): ThreadPoolExecutor {
         return creatCommonTaskPool(
@@ -127,24 +127,33 @@ object ThreadUtil {
         val queueCount: Int by lazy {
             when (type) {
                 TaskType.SINGLE -> {
-                    100 * concurrent
+                    interval.let {
+                        if (it == 0) {
+                            1000 * concurrent
+                        } else {
+                            1000 / Math.abs(interval) * concurrent
+                        }
+                    }
                 }
                 else -> {
-                    concurrent * (taskUseTime / interval)
+                    when(interval) {
+                        0 -> concurrent
+                        else -> concurrent * (taskUseTime / interval)
+                    }
                 }
             }
         }
 
         return threadPoolMap[poolName].let { pool ->
             pool ?: ThreadPoolExecutor(
-                    coreSize,
-                    maxSize,
-                    (maxSize * taskUseTime).toLong(),
-                    taskUseTimeUnit,
-                    LinkedBlockingDeque<Runnable>(queueCount),
-                    getThreadFactory(poolName),
-                    reject
-                ).also {
+                coreSize,
+                maxSize,
+                (maxSize * taskUseTime).toLong(),
+                taskUseTimeUnit,
+                LinkedBlockingDeque<Runnable>(queueCount),
+                getThreadFactory(poolName),
+                reject
+            ).also {
                 threadPoolMap[poolName] = it
             }
         }
