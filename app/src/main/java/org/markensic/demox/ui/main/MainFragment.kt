@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.ViewModelProviders
+import org.markensic.baselibrary.api.utils.XmlParserUtils
 import org.markensic.baselibrary.global.AppLog
 import org.markensic.baselibrary.impl.ui.BaseUiView
 import org.markensic.demox.R
@@ -65,6 +66,49 @@ class MainFragment : Fragment(), BaseUiView {
             val nullString: String? = null
             Log.e(":test", nullString!!)
         }
+
+        testXmlParser()
     }
+
+    fun testXmlParser() {
+        val xmlDate = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <Transaction>
+              <Transaction_Header>
+                <tran_response>
+                  <QJGZH><![CDATA[1010111681599113654421152]]></QJGZH>
+                  <ZQLSH><![CDATA[0200003550]]></ZQLSH>
+                  <status><![CDATA[FAIL]]></status>
+                  <POS_RSP_CODE><![CDATA[96]]></POS_RSP_CODE>
+                </tran_response>
+                <transaction_id><![CDATA[POSJHZF08]]></transaction_id>
+                <SYS_EVT_TRACE_ID><![CDATA[1010111681599113654421152]]></SYS_EVT_TRACE_ID>
+              </Transaction_Header>
+              <Transaction_Body>
+                <response>
+                  <trade_state_desc><![CDATA[0200003550,[TBL_JHZF_TRAN]流水记录不存在]]></trade_state_desc>
+                  <bank_type/>
+                  <MERCHANT_CODE><![CDATA[105000153110676]]></MERCHANT_CODE>
+                  <POSB_TERM_NO><![CDATA[10040255]]></POSB_TERM_NO>
+                  <BATCH_NO/>
+                  <Rtrvl_Ref_No/>
+                  <POS_TRC_NO/>
+                  <Acpt_Lnd_Txn_Tm/>
+                  <Acpt_Lnd_Txn_Dt/>
+                  <OnLn_Py_Txn_Ordr_ID/>
+                  <S2P_TRANS_TYPE/>
+                  <Pos_Txn_Status><![CDATA[FA]]></Pos_Txn_Status>
+                  <Cst_AccNo/>
+                  <Ahn_TxnAmt/>
+                  <CardNo_Inpt_MtdCd/>
+                  <POS_ID><![CDATA[1050001531106760014]]></POS_ID>
+                </response>
+              </Transaction_Body>
+            </Transaction>
+            """
+        val json = XmlParserUtils.pullTransactionXml(xmlDate)
+        AppLog.e("XML", "json -> $json");
+    }
+
 
 }

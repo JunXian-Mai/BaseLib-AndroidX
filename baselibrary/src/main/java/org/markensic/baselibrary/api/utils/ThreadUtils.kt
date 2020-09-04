@@ -4,7 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder
 import java.util.concurrent.*
 import kotlin.math.roundToInt
 
-object ThreadUtil {
+object ThreadUtils {
     val threadPoolMap: MutableMap<String, ThreadPoolExecutor> = mutableMapOf()
 
     val cpuCount: Int
