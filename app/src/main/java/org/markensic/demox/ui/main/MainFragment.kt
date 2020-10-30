@@ -1,5 +1,7 @@
 package org.markensic.demox.ui.main
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,8 +12,10 @@ import android.widget.Button
 import androidx.lifecycle.ViewModelProviders
 import org.markensic.baselibrary.api.utils.XmlParserUtils
 import org.markensic.baselibrary.global.AppLog
+import org.markensic.baselibrary.impl.delegate.ReleasableNotNull
 import org.markensic.baselibrary.impl.ui.BaseUiView
 import org.markensic.demox.R
+import java.io.InputStream
 
 class MainFragment : Fragment(), BaseUiView {
 
@@ -24,6 +28,8 @@ class MainFragment : Fragment(), BaseUiView {
 
     private lateinit var logIoTest: Button
     private lateinit var crashLogTest: Button
+    private lateinit var xmlParserTest: Button
+    private lateinit var releasableDelegateTest: Button
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -37,6 +43,8 @@ class MainFragment : Fragment(), BaseUiView {
 
         logIoTest = rootView.findViewById(R.id.log_io_test)
         crashLogTest = rootView.findViewById(R.id.crash_log_test)
+        xmlParserTest = rootView.findViewById(R.id.xml_parser_test)
+        releasableDelegateTest = rootView.findViewById(R.id.releasable_delegate_test)
 
         logIoTest.setOnClickListener {
             Thread{
@@ -67,9 +75,16 @@ class MainFragment : Fragment(), BaseUiView {
             Log.e(":test", nullString!!)
         }
 
-        testXmlParser()
+        xmlParserTest.setOnClickListener {
+            testXmlParser()
+        }
+
+        releasableDelegateTest.setOnClickListener {
+            testReleasableDelegate()
+        }
     }
 
+    //region xml解析为json
     fun testXmlParser() {
         val xmlDate = """
             <?xml version="1.0" encoding="UTF-8"?>
@@ -109,6 +124,10 @@ class MainFragment : Fragment(), BaseUiView {
         val json = XmlParserUtils.pullTransactionXml(xmlDate)
         AppLog.e("XML", "json -> $json");
     }
+    //endregion
 
-
+    //region 可释放非空对象测试
+    fun testReleasableDelegate() {
+    }
+    //endregion
 }
