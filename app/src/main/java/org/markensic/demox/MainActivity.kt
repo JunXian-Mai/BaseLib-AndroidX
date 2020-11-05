@@ -2,7 +2,7 @@ package org.markensic.demox
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import org.markensic.baselibrary.api.utils.PermissionsUtils
+import org.markensic.baselibrary.api.utils.Permissions
 import org.markensic.demox.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +15,6 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.container, MainFragment.newInstance())
                     .commitNow()
         }
-        PermissionsUtils.requestPermission(this, PermissionsUtils.readWritePermission)
+        Permissions.requestPermission(this, Permissions.readWritePermission)
     }
 }
