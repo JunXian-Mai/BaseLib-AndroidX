@@ -16,6 +16,8 @@ import java.nio.file.Files
 
 
 object FileKtUtils {
+    val sDefaultPath = AppGlobal.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator
+
     fun createFile(path: String): File {
         return File(path).also {
             if (!it.exists()) {
