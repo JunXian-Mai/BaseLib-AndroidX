@@ -77,7 +77,7 @@ class LoadingDialog private constructor(context: Context) : Dialog(context), Bas
     companion object {
         private var drawable: Drawable? = null
         private var dialog: LoadingDialog? = null
-        private var weakCurAct: WeakReference<Activity>? = null
+        private var weaklasterAct: WeakReference<Activity>? = null
 
         fun setLoaingDrawable(d: Drawable): LoadingDialog.Companion {
             drawable = d
@@ -87,10 +87,10 @@ class LoadingDialog private constructor(context: Context) : Dialog(context), Bas
         fun loading() {
             runOnUiThread {
                 cancelLoading()
-                if (weakCurAct?.get() != it) {
-                    weakCurAct?.clear()
-                    weakCurAct = WeakReference(it)
-                    dialog = weakCurAct?.get()?.let { LoadingDialog(it) }
+                if (weaklasterAct?.get() != it) {
+                    weaklasterAct?.clear()
+                    weaklasterAct = WeakReference(it)
+                    dialog = weaklasterAct?.get()?.let { LoadingDialog(it) }
                 }
                 if (dialog?.isShowing == false) {
                     drawable?.also {
@@ -110,7 +110,7 @@ class LoadingDialog private constructor(context: Context) : Dialog(context), Bas
         }
 
         private fun runOnUiThread(f:(act: Activity) -> Unit) {
-            ActivityManager.weakCurrentActivity?.get()?.also {
+            ActivityManager.weakLasterActivity?.get()?.also {
                 it.runOnUiThread {
                     f(it)
                 }
