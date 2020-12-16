@@ -3,11 +3,9 @@ package org.markensic.baselibrary.global
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import org.markensic.baselibrary.impl.ActivityLifecycle
+import org.markensic.baselibrary.impl.lifecycle.ActivityLifecycle
 import java.lang.ref.WeakReference
 import java.util.*
-import java.util.Collections.copy
 
 object ActivityManager: ActivityLifecycle {
     val stack: Stack<WeakReference<Activity>> = Stack()
@@ -54,7 +52,7 @@ object ActivityManager: ActivityLifecycle {
         }
     }
 
-    fun lunachToMain() {
+    fun launchToMain() {
         stack.mapNotNull {
             it.get()
         }.apply {

@@ -4,7 +4,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Process
 import org.markensic.baselibrary.api.utils.DisPlayUtils
-import org.markensic.baselibrary.api.utils.FileKtUtils
+import org.markensic.baselibrary.api.utils.FileKt
 import org.markensic.baselibrary.global.AppGlobal.Companion.sApplication
 import java.io.File
 import java.text.SimpleDateFormat
@@ -16,7 +16,7 @@ object CrashHandler: Thread.UncaughtExceptionHandler {
     private val path = AppGlobal.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator + "crashfolder" + File.separator
     private val systemHandler = Thread.getDefaultUncaughtExceptionHandler()
 
-    var upLoadCrashFileListener: UploadListener? = null
+    var upLoadCrashListener: UploadListener? = null
 
     fun init() {
         Thread.setDefaultUncaughtExceptionHandler(this)
@@ -71,7 +71,7 @@ object CrashHandler: Thread.UncaughtExceptionHandler {
     private fun handleException(p0: Thread, p1: Throwable): Boolean {
         return p1.let { ex ->
             val fileName = "Crash_${SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒").format(Date())}_${p1::class.java.simpleName}.log"
-            FileKtUtils.createFile(path + fileName).also { file ->
+            FileKt.createFile(path + fileName).also { file ->
                 file.printWriter().use { writer ->
                     writer.println("""
                         Crash Time:
@@ -86,8 +86,9 @@ object CrashHandler: Thread.UncaughtExceptionHandler {
                         cause.printStackTrace(writer)
                     }
                 }
-                upLoadCrashFileListener?.upLoadCrashFile(file)
+                upLoadCrashListener?.upLoadCrashFile(file)
             }
+            upLoadCrashListener?.upLoadThrowable(ex)
             true
         }
     }
@@ -100,5 +101,7 @@ object CrashHandler: Thread.UncaughtExceptionHandler {
 
     interface UploadListener {
         fun upLoadCrashFile(f: File)
+
+        fun upLoadThrowable(tr: Throwable)
     }
 }

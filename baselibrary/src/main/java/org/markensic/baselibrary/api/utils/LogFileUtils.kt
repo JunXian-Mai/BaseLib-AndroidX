@@ -6,8 +6,6 @@ import java.io.File
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 object LogFileUtils {
@@ -17,7 +15,7 @@ object LogFileUtils {
     private const val POOL_NAME = "logThreadPool"
 
     private val sp = SharedPreferencesMapDelegate(LOG)
-    private val pool = ThreadUtils.creatSingleTaskPool(POOL_NAME, 5, 4, 1, TimeUnit.MILLISECONDS, ThreadPoolExecutor.DiscardOldestPolicy())
+    private val pool = ThreadUtils.createSingleThreadPool(POOL_NAME)
 
     private val checkValid = AtomicBoolean(false)
 
@@ -62,7 +60,7 @@ object LogFileUtils {
 
     fun checkLogFileVailTime() {
         if (checkValid.compareAndSet(false, true)) {
-            FileKtUtils.iterateFileInDir(logPath) { file ->
+            FileKt.iterateFileInDir(logPath) { file ->
                 if (file.isFile && file.name.endsWith(".log")) {
                     val logDateTime = file.name.substring(0, file.name.lastIndexOf(".log")).let { dateStr ->
                         SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(dateStr, ParsePosition(0))?.time?.also {
@@ -80,7 +78,7 @@ object LogFileUtils {
         pool.execute {
             val logFilePath = "$logPath/$logFileName"
             val logText = "$msgPrefix $msg \n"
-            FileKtUtils.appendToFile(logFilePath, logText)
+            FileKt.appendToFile(logFilePath, logText)
         }
     }
 }

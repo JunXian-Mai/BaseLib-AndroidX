@@ -12,7 +12,6 @@ import android.widget.Button
 import androidx.lifecycle.ViewModelProviders
 import org.markensic.baselibrary.api.utils.XmlParserUtils
 import org.markensic.baselibrary.global.AppLog
-import org.markensic.baselibrary.impl.delegate.ReleasableNotNull
 import org.markensic.baselibrary.impl.ui.BaseUiView
 import org.markensic.demox.R
 import java.io.InputStream

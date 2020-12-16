@@ -1,9 +1,8 @@
-package org.markensic.baselibrary.impl
+package org.markensic.baselibrary.impl.lifecycle
 
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import org.markensic.baselibrary.global.AppGlobal
 import org.markensic.baselibrary.global.AppLog
 
 interface ActivityLifecycle: Application.ActivityLifecycleCallbacks {

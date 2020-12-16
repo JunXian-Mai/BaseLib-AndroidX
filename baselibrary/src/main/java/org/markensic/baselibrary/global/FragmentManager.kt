@@ -1,9 +1,8 @@
 package org.markensic.baselibrary.global
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import org.markensic.baselibrary.impl.FragmentLifecycle
+import org.markensic.baselibrary.impl.lifecycle.FragmentLifecycle
 import org.markensic.baselibrary.widget.TabLayout
 import java.lang.ref.WeakReference
 

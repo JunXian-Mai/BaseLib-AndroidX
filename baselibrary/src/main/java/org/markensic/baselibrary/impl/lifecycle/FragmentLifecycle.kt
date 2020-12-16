@@ -1,13 +1,10 @@
-package org.markensic.baselibrary.impl
+package org.markensic.baselibrary.impl.lifecycle
 
-import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import org.markensic.baselibrary.global.AppGlobal
 import org.markensic.baselibrary.global.AppLog
 
 abstract class FragmentLifecycle : FragmentManager.FragmentLifecycleCallbacks() {

@@ -15,7 +15,7 @@ import java.nio.channels.FileChannel
 import java.nio.file.Files
 
 
-object FileKtUtils {
+object FileKt {
     val sDefaultPath = AppGlobal.sApplication.getExternalFilesDir(null)!!.absolutePath + File.separator
 
     fun createFile(path: String): File {

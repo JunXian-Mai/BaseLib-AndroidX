@@ -1,151 +1,56 @@
 package org.markensic.baselibrary.api.utils
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder
-import java.lang.IllegalArgumentException
-import java.util.concurrent.*
-import kotlin.math.roundToInt
+import org.markensic.baselibrary.global.ActivityManager
+import org.markensic.baselibrary.global.AppLog
+import org.markensic.baselibrary.impl.framework.ModifyThreadPool
+import java.util.concurrent.RejectedExecutionHandler
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 object ThreadUtils {
-    val threadPoolMap: MutableMap<String, ThreadPoolExecutor> = mutableMapOf()
+    val tag = this::class.java.simpleName
+
+    val threadPoolMap: MutableMap<String, ModifyThreadPool> = mutableMapOf()
 
     val cpuCount: Int
         get() {
             return Runtime.getRuntime().availableProcessors()
         }
 
-    fun getThreadFactory(name: String): ThreadFactory {
-        return ThreadFactoryBuilder().setNameFormat("$name-task-%d").build()
+    fun getThreadFactory(name: String) =
+        ThreadFactoryBuilder().setNameFormat("$name-task-%d").build()
+
+    fun doMainThread(action: () -> Unit) {
+        ActivityManager.weakCurrentActivity?.get()?.runOnUiThread {
+            action()
+        } ?: AppLog.d(tag, "getMainThread Error")
     }
 
-    fun creatCPUTaskPool(
-        poolName: String,
-        cpuUseTime: Int,
-        ioUseTime: Int,
-        interval: Int = 0,
-        taskUseTimeUnit: TimeUnit = TimeUnit.MILLISECONDS,
-        reject: RejectedExecutionHandler = ThreadPoolExecutor.AbortPolicy()
-    ): ThreadPoolExecutor {
-        return creatCommonTaskPool(
-            poolName,
-            TaskType.CPU,
-            cpuUseTime,
-            ioUseTime,
-            interval,
-            taskUseTimeUnit,
-            reject
-        )
+    fun newThreadStart(action: () -> Unit) {
+        Thread {
+            run {
+                action()
+            }
+        }.start()
     }
 
-    fun creatIOTaskPool(
+    fun createCommonThreadPool(
         poolName: String,
-        cpuUseTime: Int,
-        ioUseTime: Int,
-        interval: Int = 0,
-        taskUseTimeUnit: TimeUnit = TimeUnit.MILLISECONDS,
+        keepLive: Pair<Long, TimeUnit> = 60.toLong() to TimeUnit.SECONDS,
         reject: RejectedExecutionHandler = ThreadPoolExecutor.AbortPolicy()
-    ): ThreadPoolExecutor {
-        return creatCommonTaskPool(
-            poolName,
-            TaskType.IO,
-            cpuUseTime,
-            ioUseTime,
-            interval,
-            taskUseTimeUnit,
-            reject
-        )
-    }
-
-    fun creatSingleTaskPool(
-        poolName: String,
-        cpuUseTime: Int,
-        ioUseTime: Int,
-        interval: Int = 0,
-        taskUseTimeUnit: TimeUnit = TimeUnit.MILLISECONDS,
-        reject: RejectedExecutionHandler = ThreadPoolExecutor.AbortPolicy()
-    ): ThreadPoolExecutor {
-        return creatCommonTaskPool(
-            poolName,
-            TaskType.SINGLE,
-            cpuUseTime,
-            ioUseTime,
-            interval,
-            taskUseTimeUnit,
-            reject
-        )
-    }
-
-    fun creatCommonTaskPool(
-        poolName: String,
-        type: TaskType,
-        cpuUseTime: Int,
-        ioUseTime: Int,
-        interval: Int = 0,
-        taskUseTimeUnit: TimeUnit = TimeUnit.MILLISECONDS,
-        reject: RejectedExecutionHandler = ThreadPoolExecutor.AbortPolicy()
-    ): ThreadPoolExecutor {
-        val taskUseTime = cpuUseTime + ioUseTime
-        val coreSize = when (type) {
-            TaskType.CPU -> {
-                cpuCount + 1
-            }
-            TaskType.IO -> {
-                (cpuCount * (1 + ioUseTime.toFloat() / cpuUseTime)).roundToInt()
-            }
-            TaskType.SINGLE -> {
-                1
-            }
-            else -> {
-                throw IllegalArgumentException("Not EXIST TASK TYPE")
-            }
-        }
-
-        val concurrent = when (interval) {
-            0 -> {
-                taskUseTime * coreSize
-            }
-            else -> {
-                (taskUseTime * coreSize / Math.abs(interval).toFloat()).let {
-                    if (it < coreSize) {
-                        coreSize
-                    } else {
-                        it.roundToInt()
-                    }
-                }
-            }
-        }
-        val maxSize = when (type) {
-            TaskType.SINGLE -> {
-                1
-            }
-            else -> {
-                concurrent
-            }
-        }
-
-        val queueCount = when (type) {
-            TaskType.SINGLE -> {
-                interval.let {
-                    when(interval) {
-                        0 -> 10000 * concurrent
-                        else -> 10000 / Math.abs(interval) * concurrent
-                    }
-                }
-            }
-            else -> {
-                when(interval) {
-                    0 -> concurrent
-                    else -> concurrent * (taskUseTime / interval)
-                }
-            }
-        }
+    ): ModifyThreadPool {
+        val coreSize = cpuCount
+        val maxSize = cpuCount * 2
+        val queueCount = coreSize * maxSize
 
         return threadPoolMap[poolName].let { pool ->
-            pool ?: ThreadPoolExecutor(
+            pool ?: ModifyThreadPool(
                 coreSize,
                 maxSize,
-                (maxSize * taskUseTime).toLong(),
-                taskUseTimeUnit,
-                LinkedBlockingDeque<Runnable>(queueCount),
+                keepLive.first,
+                keepLive.second,
+                queueCount,
                 getThreadFactory(poolName),
                 reject
             ).also {
@@ -154,9 +59,28 @@ object ThreadUtils {
         }
     }
 
-    enum class TaskType {
-        SINGLE,
-        CPU,
-        IO
+    fun createSingleThreadPool(
+        poolName: String,
+        keepLive: Pair<Long, TimeUnit> = 60.toLong() to TimeUnit.SECONDS,
+        reject: RejectedExecutionHandler = ThreadPoolExecutor.AbortPolicy()
+    ): ModifyThreadPool {
+        val coreSize = 1
+        val maxSize = 1
+        val queueCount = coreSize * 10
+
+        return threadPoolMap[poolName].let { pool ->
+            pool ?: ModifyThreadPool(
+                coreSize,
+                maxSize,
+                keepLive.first,
+                keepLive.second,
+                queueCount,
+                getThreadFactory(poolName),
+                reject,
+                true
+            ).also {
+                threadPoolMap[poolName] = it
+            }
+        }
     }
 }
