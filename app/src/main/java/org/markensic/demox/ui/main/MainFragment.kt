@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import org.markensic.baselibrary.api.utils.ThreadUtils
 import org.markensic.baselibrary.api.utils.XmlParserUtils
 import org.markensic.baselibrary.global.AppLog
+import org.markensic.baselibrary.global.loge
+import org.markensic.baselibrary.global.logi
 import org.markensic.baselibrary.impl.ui.BaseUiView
 import org.markensic.demox.R
 
@@ -45,27 +48,62 @@ class MainFragment : Fragment(), BaseUiView {
     releasableDelegateTest = rootView.findViewById(R.id.releasable_delegate_test)
 
     logIoTest.setOnClickListener {
-      Thread {
-        for (t in 1..10000000000) {
-          AppLog.e("AndroidJUnit4", "Thread1 count $t")
-          val sleepTime = 20 * Math.random() + 1
+//      Thread {
+//        for (t in 1..10000000000) {
+//          loge("Thread1 count $t")
+//          val sleepTime = 1 * Math.random() + 1
+//          Thread.sleep(sleepTime.toLong())
+//        }
+//      }.start()
+//      Thread {
+//        for (t in 10000000001..20000000000) {
+//          loge("Thread2 count $t")
+//          val sleepTime = 1 * Math.random() + 1
+//          Thread.sleep(sleepTime.toLong())
+//        }
+//      }.start()
+//      Thread {
+//        for (t in 20000000001..30000000000) {
+//          loge("Thread3 count $t")
+//          val sleepTime = 1 * Math.random() + 1
+//          Thread.sleep(sleepTime.toLong())
+//        }
+//      }.start()
+      ThreadUtils.createCommonThreadPool("test-commonPool").execute {
+        for (t in 30000000001..40000000000) {
+          loge("Thread4 count $t")
+          val sleepTime = 1 * Math.random() + 1
           Thread.sleep(sleepTime.toLong())
         }
-      }.start()
-      Thread {
-        for (t in 10000000001..20000000000) {
-          AppLog.e("AndroidJUnit4", "Thread2 count $t")
-          val sleepTime = 20 * Math.random() + 1
+      }
+      ThreadUtils.createCommonThreadPool("test-commonPool").execute {
+        for (t in 40000000001..50000000000) {
+          loge("Thread5 count $t")
+          val sleepTime = 1 * Math.random() + 1
           Thread.sleep(sleepTime.toLong())
         }
-      }.start()
-      Thread {
-        for (t in 20000000001..30000000000) {
-          AppLog.e("AndroidJUnit4", "Thread3 count $t")
-          val sleepTime = 20 * Math.random() + 1
+      }
+      ThreadUtils.createCommonThreadPool("test-commonPool").execute {
+        for (t in 50000000001..60000000000) {
+          loge("Thread6 count $t")
+          val sleepTime = 1 * Math.random() + 1
           Thread.sleep(sleepTime.toLong())
         }
-      }.start()
+      }
+      ThreadUtils.createCommonThreadPool("test-commonPool").execute {
+        for (t in 60000000001..70000000000) {
+          loge("Thread7 count $t")
+          val sleepTime = 1 * Math.random() + 1
+          Thread.sleep(sleepTime.toLong())
+        }
+      }
+      ThreadUtils.createCommonThreadPool("test-commonPool").execute {
+        for (t in 70000000001..80000000000) {
+          loge("Thread8 count $t")
+          val sleepTime = 1 * Math.random() + 1
+          Thread.sleep(sleepTime.toLong())
+        }
+      }
     }
 
     crashLogTest.setOnClickListener {
