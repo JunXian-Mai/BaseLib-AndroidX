@@ -2,7 +2,6 @@ package org.markensic.baselibrary.impl.framework
 
 import org.markensic.baselibrary.api.utils.ReflectUtils
 import java.lang.reflect.Field
-import java.lang.reflect.Modifier
 import java.util.concurrent.LinkedBlockingQueue
 
 
