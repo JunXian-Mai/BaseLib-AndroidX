@@ -10,7 +10,7 @@ fun Bitmap.toByteArray(): ByteArray {
   return baos.toByteArray()
 }
 
-fun Bitmap.compress(targetDensity: Int): Bitmap {
+fun Bitmap.compressInWidth(targetDensity: Int): Bitmap {
   val opt = BitmapFactory.Options()
   opt.inJustDecodeBounds = true
   val bytes = this.toByteArray()
