@@ -1,4 +1,4 @@
-package org.markensic.baselibrary.widget
+package org.markensic.baselibrary.ui.widget
 
 import android.app.Activity
 import android.app.Dialog
@@ -13,7 +13,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import org.markensic.baselibrary.R
 import org.markensic.baselibrary.global.ActivityManager
-import org.markensic.baselibrary.impl.ui.BaseUiView
+import org.markensic.baselibrary.framework.ui.BaseUiView
 import java.lang.ref.WeakReference
 
 class LoadingDialog private constructor(context: Context) : Dialog(context), BaseUiView {

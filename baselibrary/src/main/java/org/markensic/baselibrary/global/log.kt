@@ -1,6 +1,4 @@
-package org.markensic.baselibrary.global.extensions
-
-import org.markensic.baselibrary.global.AppLog
+package org.markensic.baselibrary.global
 
 fun <T : Any> T.logi(log: String) {
   AppLog.i(getTag(this), log)
@@ -21,6 +19,14 @@ fun <T : Any> T.logv(log: String) {
 fun <T : Any> T.logw(log: String) {
   AppLog.w(getTag(this), log)
 }
+
+fun <T: String?> T.print() {
+  val string = this as String?
+  if (string?.isNotBlank() == true) {
+    AppLog.i("", string)
+  }
+}
+
 
 private fun getTag(any: Any): String {
   var name = any::class.java.name

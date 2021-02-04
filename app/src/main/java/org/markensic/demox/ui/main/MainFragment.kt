@@ -11,9 +11,12 @@ import androidx.lifecycle.ViewModelProviders
 import org.markensic.baselibrary.api.utils.ThreadUtils
 import org.markensic.baselibrary.api.utils.XmlParserUtils
 import org.markensic.baselibrary.global.AppLog
-import org.markensic.baselibrary.global.extensions.loge
-import org.markensic.baselibrary.impl.ui.BaseUiView
+import org.markensic.baselibrary.global.loge
+import org.markensic.baselibrary.global.tryCatch
+import org.markensic.baselibrary.framework.ui.BaseUiView
+import org.markensic.baselibrary.global.print
 import org.markensic.demox.R
+import java.lang.RuntimeException
 
 class MainFragment : Fragment(), BaseUiView {
 
@@ -118,6 +121,10 @@ class MainFragment : Fragment(), BaseUiView {
     releasableDelegateTest.setOnClickListener {
       testReleasableDelegate()
     }
+
+    testTryCatch()
+
+    testTryCatch()
   }
 
   //region xml解析为json
@@ -166,4 +173,11 @@ class MainFragment : Fragment(), BaseUiView {
   fun testReleasableDelegate() {
   }
   //endregion
+
+
+  fun testTryCatch() {
+    tryCatch {
+      throw RuntimeException("RuntimeException")
+    }.print()
+  }
 }

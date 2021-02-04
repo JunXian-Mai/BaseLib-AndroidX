@@ -1,4 +1,4 @@
-package org.markensic.baselibrary.global.extensions
+package org.markensic.baselibrary.ui
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
