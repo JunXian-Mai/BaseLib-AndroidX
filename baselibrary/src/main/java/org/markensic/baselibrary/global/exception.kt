@@ -1,9 +1,7 @@
 package org.markensic.baselibrary.global
 
-import java.lang.Exception
 
-
-fun <T> tryCatch(process: () -> T) : String? {
+fun <T> tryCatch(process: () -> T): String? {
   var errorMsg: String? = null
   try {
     process()

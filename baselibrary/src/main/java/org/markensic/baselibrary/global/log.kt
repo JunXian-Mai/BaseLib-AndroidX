@@ -20,7 +20,7 @@ fun <T : Any> T.logw(log: String) {
   AppLog.w(getTag(this), log)
 }
 
-fun <T: String?> T.print() {
+fun <T : String?> T.print() {
   val string = this as String?
   if (string?.isNotBlank() == true) {
     AppLog.i("", string)

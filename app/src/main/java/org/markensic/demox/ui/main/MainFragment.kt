@@ -10,13 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import org.markensic.baselibrary.api.utils.ThreadUtils
 import org.markensic.baselibrary.api.utils.XmlParserUtils
+import org.markensic.baselibrary.framework.ui.BaseUiView
 import org.markensic.baselibrary.global.AppLog
 import org.markensic.baselibrary.global.loge
-import org.markensic.baselibrary.global.tryCatch
-import org.markensic.baselibrary.framework.ui.BaseUiView
 import org.markensic.baselibrary.global.print
+import org.markensic.baselibrary.global.tryCatch
 import org.markensic.demox.R
-import java.lang.RuntimeException
 
 class MainFragment : Fragment(), BaseUiView {
 
